@@ -25,20 +25,13 @@ $db = new PDO($dbs, $db_user, $db_pass);
     <!--ヘッダー開始-->
     <div class="head">
         <div id="head-left">
-            <h1>MyPortfolio</h1>
-        </div>
-
-        <div id="head-right">
-            <ul>
-                <li>ログイン</li>
-                <li>Github</li>
-            </ul>
+            <h1>初心者エンジニアのための質問掲示板</h1>
         </div>
     <!--ヘッダー終了-->
     <!--コンテンツ開始-->
-    <div id="content">
-        <h2>ログインに成功しました。</h2>
-        <p>3秒後にログイン後画面に遷移します</p>
+    <div id="top_content">
+        <h2>ユーザー登録が完了しました。</h2>
+        <p>3秒後にトップページに遷移します</p>
     </div>
     <!--コンテンツ終了-->
     <!--フッター終了-->

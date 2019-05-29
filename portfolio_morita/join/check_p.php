@@ -44,18 +44,17 @@ if(!empty($_POST)){
 <body>
 <div id="wrap">
 <!--ヘッダー開始-->
-    <div class="head">
-        <div id="head-left">
-        <h1><a href="../top_p.php">MyPortfolio</a></h1>
+        <div class="head">
+            <div id="head-left">
+            <h1><a class="header_title" href="top_p.php">初心者エンジニアのための質問掲示板</a></h1>
+            </div>
+            <div id="head-right">
+                <ul>
+                    <li><a class="header_link" href="top_p.php">トップページ</a></li>
+                    <li><a class="header_link" href="login_p.php">ログイン</a></li>
+                </ul>
+            </div>
         </div>
-
-        <div id="head-right">
-            <ul>
-                <li><a href="top_p.php">トップページ</a></li>
-                <li>Github</li>
-            </ul>
-        </div>
-    </div>
 <!--ヘッダー終了-->
 <!--入力フォーム開始-->
     <div id="content">
@@ -64,7 +63,7 @@ if(!empty($_POST)){
         <form action="" method="post">    
             <!--この確認画面で「登録」ボタンをクリックしたか判断するためにinputタグをhidden属性として使う-->
             <input type="hidden" name="action" value="submit">
-            <table>
+            <table class="check_form">
                 <tr>
                     <td>ニックネーム</td>
                     <!--index1.phpで入力され、セッションに保存された値を出力する-->
@@ -92,12 +91,15 @@ if(!empty($_POST)){
                 </tr>
             </table>
             <p>この内容でよろしいですか？</p>
-            <div class="btn"><a href="index1_p.php?action=rewrite">戻る</div>
-            <input type="submit" value="登録">
+            <div class="button_center">
+                <ul>
+                    <li><input class="button_link2" type="submit" value="登録" ></li>
+                    <li><input class="button_link2" type="button" onclick="location.href='index1_p.php?action=rewrite'" value="戻る"></li>
+                </ul>
+            </div>
         </form>
     </div>
 <!--入力フォーム終了-->
-
 <!--フッター開始-->
     <div class="footer">
         <p>©︎2019 morita</p>    

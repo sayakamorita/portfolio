@@ -20,32 +20,43 @@ if($_POST['name'] === ''){
     $error['name'] = 'blank';
 }
 /*ニックネームのバリデーションチェック*/
-
 if($_POST['email'] === ''){
     $error['email'] = 'blank';
 }
 /*メールアドレスのバリデーションチェック*/
+if(!preg_match('/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/iD', $_POST['email'])){
+    $error['email'] = 'validation_email';
+}
 
 /*パスワードが4文字以下の場合のエラーチェック*/
+
 if(strlen($_POST['password']) < 4){
     $error['password'] = 'length';
 }
-if($_POST['password'] === ''){
+/*パスワードが空白だった場合のエラーチェック*/
+if($_POST['password']  === ''){
     $error['password'] = 'blank';
 }
+
+/*確認パスワードが異なった場合のエラーチェック*/
+if($_POST['password']  !== $_POST['password_confirm'] ){
+    $error['password'] = 'wrong_password';
+}
+
+/*パスワードのバリデーションチェック*/
+    if (!preg_match("/^[a-zA-Z0-9]+$/", $_POST['password'] )) {
+        $error['password'] = 'validation_password';
+    }
+
+/*確認パスワードが異なった場合のエラーチェック*/
+if($_POST['password_confirm'] === ''){
+    $error['password_confirm'] = 'blank';
+}
+
 /*プログラミング言語が未入力の場合のエラーチェック*/
 if(empty($_POST['p_language'])){
     $error['p_language'] = 'blank';
     }
-
-$fileName = $_FILES['image']['name'];
-if(!empty($fileName)){
-    $ext = substr($fileName, -3);
-    if($ext != 'jpg' && $ext != 'gif' && $ext != 'png'){
-        $error['image'] = 'type';
-    }
-}
-
 //アカウントが重複していないかをチェック
 if(empty($error)){
     $member = $db ->prepare('SELECT COUNT(*) AS cnt FROM members WHERE email = ?');
@@ -57,9 +68,6 @@ if(empty($error)){
 }
 /*すべてのエラーチェックが完了し、エラーがない状態であればcheck.phpに遷移するようにする*/
 if(empty($error)){
-    $image = date('YmdHis').$_FILES['image']['name'];
-    move_uploaded_file($_FILES['image']['tmp_name'],'/var/www/html/member_picture_p'.$image);
-    $_SESSION['join']['image'] = $image;
     /*エラーチェックが完了したあとに、joinという名前のセッションに$_POST（formで送信されてきた値）を格納する処理*/
     $_SESSION['join'] = $_POST;
     /*プログラミング言語が選択されている場合、「,」で区切って確認画面で表示させる*/
@@ -76,7 +84,6 @@ exit();
 if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
     $_POST['name'] = $_SESSION['join']['name'];
     $_POST['email'] = $_SESSION['join']['email'];
-    $_POST['image'] = $_SESSION['join']['image'];
 }
 ?>
 <!DOCTYPE html>
@@ -106,7 +113,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
     </div>
 <!--ヘッダー終了-->
 <!--入力フォーム開始-->
-    <div id="top_content">
+    <div id="content">
         <h2>新規ユーザー登録</h2>
         <h3>ユーザー情報を入力してください。</h3>
         <!--formタグで囲まれたものは、method属性で指定された$_POSTという【2次元配列】の中に格納される。-->
@@ -203,7 +210,16 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                     ;?>
                     <?php if($_POST['age'] === '50代'){
                             echo 'selected';
-                    };?>>50代</option> 
+                    };?>>50代</option>
+                    <option value='60代' 
+                        <?php if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
+                            if($_SESSION['join']['age'] === '60代'){
+                            echo 'selected';
+                        }}
+                    ;?>
+                    <?php if($_POST['age'] === '60代'){
+                            echo 'selected';
+                    };?>>60代</option>  
                 </select>
             <p>メールアドレス：<input type="text" name="email" placeholder ="taroyamada@xxx.com" value="<?php  print(htmlspecialchars($_POST['email'],ENT_QUOTES));?>"/>
                 <?php if($error['email'] === 'blank'):?>
@@ -212,6 +228,9 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                 <?php if($error['email'] === 'duplicate'):?>
                 <p class="error">*指定されたメールアドレスはすでに登録されています。</p>
                 <?php endif;?>
+                <?php if($error['email'] ==='validation_email'):?>
+                    <p class="error">*正しい形式でメールアドレスを入力してください。</p>
+                <?php endif;?>  
             </p>
             <div class="checkbox01">学習中のプログラミング言語（複数選択可）：
             <label>
@@ -253,14 +272,14 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                 <span class="checkbox01-parts">Ruby</span>
             </label>
             <label>
-                <input type="checkbox" name="p_language[]" class="checkbox01-input" value="Python" 
+                <input type="checkbox" name="p_language[]" class="checkbox01-input" value="Python"
                 <?php if($_REQUEST['action'] == 'rewrite'){
-                        if(strpos($_SESSION['join']['p_language'],'Python') !== false){
-                            echo 'checked';
-                        }
-                    }?>>
+                if(strpos($_SESSION['join']['p_language'],'Python') !== false){
+                echo 'checked';
+                }
+                }?>>
                 <span class="checkbox01-parts">Python</span>
-            </label>
+                </label>
             <label>
                 <input type="checkbox" name="p_language[]" class="checkbox01-input" value="HTML/CSS" 
                 <?php if($_REQUEST['action'] == 'rewrite'){
@@ -292,22 +311,29 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                     <p class="error">*学習中のプログラミング言語を選択してください。</p>
                 <?php endif;?>
             </div>
-            <p>プロフィール画像：<input type="file" name="image" size="35" value="test"/></p>
-            <?php if($error['image'] === 'type'):?>
-                <p class="error">*写真などは「.gif」「.jpg」または「.png」の画像を指定してください。</p>
-                <?php endif;?>
-                <?php if(!empty($error)):?>
-                <p class="error">*恐れ入りますが、画像をもう一度指定してください。</p>
-                <?php endif;?>
-            <p>パスワード：<input type="password" name="password" value="<?php print(htmlspecialchars($_POST['password'],ENT_QUOTES));?>"/>
+            <p>パスワード(半角英数字4文字以上)：<input type="password" name="password" value="<?php print(htmlspecialchars($_POST['password'],ENT_QUOTES));?>"/>
                 <?php if($error['password'] === 'length'):?>
                     <p class="error">*パスワードは4文字以上で入力してください。</p>
                 <?php endif;?>
                 <?php if($error['password'] === 'blank'):?>
                     <p class="error">*パスワードを入力してください。</p>
                 <?php endif;?>
+                <?php if($error['password'] ==='validation_password'):?>
+                    <p class="error">*パスワードは半角英数字で入力してください。</p>
+                <?php endif;?>    
+                
             </p>
-            <input type="submit" value="確認">
+            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value="">
+            <?php if($error['password_confirm'] === 'blank'):?>
+                    <p class="error">*パスワード(確認)を入力してください。</p>
+            <?php endif;?>
+            <?php if($_POST['password_confirm'] !=='' && $error['password'] === 'wrong_password') :?>
+                    <p class="error">*パスワードとパスワード(確認)が一致しません。</p>
+            <?php endif;?>
+            <br>
+            <br>
+            <br>
+            <input type="submit" class="button_link2" value="確認">
         </form>
     </div>
 <!--入力フォーム終了-->

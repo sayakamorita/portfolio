@@ -12,6 +12,11 @@ $db = new PDO($dbs, $db_user, $db_pass);
   print('DB接続エラー：'.$e ->getMessage());
 }
 
+/*ログイン画面からトップ画面に遷移した際のhiddenタグを消去する*/
+if(isset($_SESSION['login'])){
+    unset($_SESSION['login']);
+}
+
 /*ログインしている場合の処理*/
 if(isset($_SESSION['id'])){
 $datas = $db->prepare('SELECT * FROM members WHERE id = ?');
@@ -34,12 +39,30 @@ if(!empty($_POST)){
         $error['email'] = 'blank';
     }
 
+    /*メールアドレスのバリデーションチェック*/
+    if(!preg_match('/^([a-z0-9\+_\-]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/iD', $_POST['email'])){
+        $error['email'] = 'validation_email';
+    }
+
     /*パスワードが4文字以下の場合のエラーチェック*/
     if(strlen($_POST['password']) < 4){
         $error['password'] = 'length';
     }
     if($_POST['password'] === ''){
         $error['password'] = 'blank';
+    }
+
+    if($_POST['password'] !== $_POST['password_confirm'] ){
+        $error['password'] = 'wrong_password';
+    }
+
+    /*パスワードのバリデーションチェック*/
+    if (!preg_match("/^[a-zA-Z0-9]+$/", $_POST['password'] )) {
+        $error['password'] = 'validation_password';
+    }
+
+    if($_POST['password_confirm'] === ''){
+        $error['password_confirm'] = 'blank';
     }
     
     if(empty($_POST['p_language'])){
@@ -91,7 +114,6 @@ if($_REQUEST['user_rewrite'] == 'rewrite_edit'){
         <div id="head-right">
             <ul>
             <li><a class="header_link" href="top_p.php">トップページ</a></li>
-            <li><a class="header_link" href="user_detail.php">ユーザー登録情報</a></li>
             <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
             </ul>
         </div>
@@ -201,6 +223,9 @@ if($_REQUEST['user_rewrite'] == 'rewrite_edit'){
             </p>   
                 <?php if($error['email'] === 'duplicate'):?>
                 <p class="error">*指定されたメールアドレスはすでに登録されています。</p>
+                <?php endif;?>
+                <?php if($error['email'] === 'validation_email'):?>
+                <p class="error">*正しい形式でメールアドレスを入力してください。</p>
                 <?php endif;?>
             </p>
             <div class="checkbox01">学習中のプログラミング言語（複数選択可）：
@@ -313,13 +338,20 @@ if($_REQUEST['user_rewrite'] == 'rewrite_edit'){
                 <?php if($error['password'] === 'blank'):?>
                     <p class="error">*パスワードを入力してください。</p>
                 <?php endif;?>
-            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value="">
-            <?php if($_POST['password'] !== $_POST['password_confirm']):?>
-            <p class="error">正しいパスワードを入力してください。</p>
+                <?php if($error['password'] === 'validation_password'):?>
+                <p class="error">*パスワードは半角英数字で入力してください。</p>
                 <?php endif;?>
-            <p>登録者情報に戻る場合は<a href="user_detail.php">こちら</a></p>
-            <input type="submit" value="確認">
+            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value="">
+            <?php if($error['password_confirm'] === 'blank'):?>
+                    <p class="error">*パスワード(確認)を入力してください。</p>
+                <?php endif;?>
+            <?php if($_POST['password_confirm'] !=='' && $error['password'] === 'wrong_password') :?>
+                    <p class="error">*パスワードとパスワード(確認)が一致しません。</p>
+                <?php endif;?>
+                <br>
+            <p><input type="submit" class="button_link2" value="確認"></p>
         </form>
+        <br>
     </div>
     <!--コンテンツ終了-->
     <!--フッター終了-->

@@ -50,7 +50,7 @@ if(!isset($_SESSION['edit'])){
         <form action="list_edit_complete.php?list_id=<?php print(htmlspecialchars($_SESSION['edit']['id']));?>" method="post">    
             <!--この確認画面で「登録」ボタンをクリックしたか判断するためにinputタグをhidden属性として使う-->
             <input type="hidden" name="action" value="submit">
-            <table>
+            <table class="check_form">
                 <tr>
                     <td>ニックネーム</td>
                     <!--index1.phpで入力され、セッションに保存された値を出力する-->
@@ -78,8 +78,12 @@ if(!isset($_SESSION['edit'])){
                 </tr>
             </table>
             <p>この内容でよろしいですか？</p>
-            <div class="btn"><a href="edit.php?action=rewrite_edit">戻る</div>
-            <input type="submit" value="登録">
+            <div class="button_center">
+                <ul>
+                    <li><input class="button_link2" type="submit" value="登録" ></li>
+                    <li><input class="button_link2" type="button" onclick="location.href='edit.php?action=rewrite_edit'" value="戻る"></li>
+                </ul>
+            </div>
         </form>
     </div>
 <!--入力フォーム終了-->

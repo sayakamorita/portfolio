@@ -348,17 +348,29 @@ padding-top:6px;
 
 .thread_content p{
   word-break : break-all;
-  color: chocolate;
+  color: #2562cc
 }
 
 .thread_content h4{
-  color: #009a9a;
+  color: #566b8f
 }
 
 .thread_content h3{
-  color: salmon;
+  color: #00348f
 }
 
 .reply{
   text-align: center;
+}
+
+#login_guest ul li{
+  display: inline;
+}
+
+.check_form{
+  margin: 0 auto;
+}
+
+.button_center ul li{
+  display: inline;
 }

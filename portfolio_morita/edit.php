@@ -37,6 +37,10 @@ if(!empty($_POST)){
         $error['email'] = 'blank';
     }
 
+    if($_POST['password'] !== $_POST['password_confirm'] ){
+        $error['password'] = 'wrong_password';
+    }
+
     /*パスワードが4文字以下の場合のエラーチェック*/
     if(strlen($_POST['password']) < 4){
         $error['password'] = 'length';
@@ -324,13 +328,16 @@ if($_REQUEST['action'] == 'rewrite_edit'&& isset($_SESSION['edit'])){
                 <?php if($error['password'] === 'blank'):?>
                     <p class="error">*パスワードを入力してください。</p>
                 <?php endif;?>
-            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value="">
-            <?php if($_POST['password'] !== $_POST['password_confirm']):?>
-            <p class="error">正しいパスワードを入力してください。</p>
+            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value=""></p>
+            <?php if($error['password'] === 'wrong_password'):?>
+                    <p class="error">*正しいパスワードを入力してください。</p>
                 <?php endif;?>
-            <p>登録者情報一覧に戻る場合は<a href="list.php">こちら</a></p>
-            <input type="submit" value="確認">
+
+            <br>
+            <input type="submit" class="button_link2" value="確認">
         </form>
+        <br>
+        <p>登録者情報一覧に戻る場合は<a href="list.php">こちら</a></p>
     
 
     </div>

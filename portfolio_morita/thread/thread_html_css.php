@@ -31,15 +31,14 @@ $former_question = $former_questions->fetch();
 */
 /*スレッドを立てる処理
 HTML/CSSに関するスレッドを立てるページなので、thread_id='html_css'に指定する。*/
-if(!empty($_POST)){
-    if($_POST['name'] !== '' && $_POST['p_question'] !== ''){
+if(!empty($_POST['button1'])){
+    if($_POST['button1']['name'] !== '' && $_POST['button1']['p_question'] !== ''){
         $questions = $db->prepare('INSERT INTO thread SET title = ?,member_name = ?, message = ?, created = NOW(),thread_id ="html_css", p_language="HTML/CSS"');
         $questions->execute(array($_POST['title'],$member['name'],$_POST['p_question']));
         header('Location:thread_html_css.php');
         exit();
     }
-}
-
+} 
 /*DBから、今何件スレッドが立っているか、数をとってくる*/
 $count = $db->query('SELECT COUNT(*) as cnt FROM thread WHERE thread_id = "html_css"');
 $cnt = $count->fetch();
@@ -125,7 +124,7 @@ $threads->execute();
             <p>投稿者：<?php print(htmlspecialchars($member['name']));?></p>
             <p>質問内容</p>
                 <textarea name="p_question" cols="100" rows="10" placeholder = "質問内容を入力してください。"></textarea>
-            <p><input class="button_link2" type="submit" value="スレッドを立てる"></p>
+            <p><input class="button_link2" type="submit" name="button1" value="スレッドを立てる"></p>
         </form>
     </div>
     <!--コンテンツ終了-->

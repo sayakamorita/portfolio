@@ -94,6 +94,7 @@ if($_POST['password'] ===''){
     <!--コンテンツ開始-->
     <div id="top_content">
         <h2>ログイン画面</h2>
+        
         <!--formタグのアクションは、ログイン時に入力がされておらずエラーになったとき、再度呼び出されるので、空白にしておく-->
         <form action="" method="post">
         <!--valueには、セッションに登録されたemailを出力する。（呼び出された時は、$_COOKIE['email']に値がない限り空白が表示される)-->
@@ -124,7 +125,13 @@ if($_POST['password'] ===''){
                 </ul>
             </div>
         </form>
-        
+        <h3>ゲストユーザーアカウントはこちら</h3>
+        <div id="login_guest">
+            <ul >
+                <li>メールアドレス：guest｜</li>
+                <li>パスワード：guest</li>
+            </ul>
+        </div>
     </div>
     <!--コンテンツ終了-->
     <!--フッター終了-->
