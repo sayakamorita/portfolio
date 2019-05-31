@@ -21,6 +21,15 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     exit();
 }
 
+/*ログイン画面からトップ画面に遷移した際のhiddenタグを消去する*/
+if(isset($_SESSION['login'])){
+    unset($_SESSION['login']);
+}
+/*スレッドをたてた時に持っているhiddenでもっているflgを消去する*/
+if(isset($_SESSION['create_thread']['flg'])){
+    unset($_SESSION['create_thread']['flg']);
+}
+
 /*DBから投稿を取得する*/
 $members = $db ->prepare('SELECT * FROM members WHERE id = ?');
 $members->execute(array($_REQUEST['id']));
@@ -44,8 +53,6 @@ $members->execute(array($_REQUEST['id']));
         <div id="head-right">
             <ul>
             <li><a class="header_link" href="top_p.php">トップページ</a></li>
-            <li><a class="header_link" href="list.php">管理者画面
-            </a></li>
             <li><a class="header_link" href="admin_logout.php">ログアウト</a></li>
             </ul>
         </div>

@@ -14,6 +14,12 @@ $db = new PDO($dbs, $db_user, $db_pass);
 if(isset($_SESSION['login'])){
     unset($_SESSION['login']);
 }
+
+/*スレッドをたてた時に持っているhiddenでもっているflgを消去する*/
+if(isset($_SESSION['create_thread']['flg'])){
+    unset($_SESSION['create_thread']['flg']);
+}
+
 /*ユーザーのログイン情報があった場合の処理*/
 if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     $_SESSION['time'] = time();
@@ -21,6 +27,7 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     $members ->execute(array($_SESSION['id']));
     $member = $members ->fetch();
 }else{
+/*ログインしていなかったら、ログイン画面に遷移する*/
     header('Location:login_p.php');
     exit();
 }
@@ -29,16 +36,15 @@ $former_questions = $db->query('SELECT * FROM thread');
 $former_questions->execute();
 $former_question = $former_questions->fetch();
 */
-/*スレッドを立てる処理
-HTML/CSSに関するスレッドを立てるページなので、thread_id='html_css'に指定する。*/
-if(!empty($_POST['button1'])){
-    if($_POST['button1']['name'] !== '' && $_POST['button1']['p_question'] !== ''){
-        $questions = $db->prepare('INSERT INTO thread SET title = ?,member_name = ?, message = ?, created = NOW(),thread_id ="html_css", p_language="HTML/CSS"');
-        $questions->execute(array($_POST['title'],$member['name'],$_POST['p_question']));
-        header('Location:thread_html_css.php');
-        exit();
-    }
-} 
+
+/*検索をするための処理*/
+$search_word = $_POST['searchThreadTitle'];/*検索窓で入力された値*/
+$search_word = '%'.$search_word.'%';
+$search_sql='SELECT * FROM thread WHERE thread_id = "html_css" AND title like :search_word';
+$search_stmt=$db->prepare($search_sql);
+$search_stmt->bindParam(':search_word',$search_word,PDO::PARAM_STR);
+$search_stmt->execute();
+
 /*DBから、今何件スレッドが立っているか、数をとってくる*/
 $count = $db->query('SELECT COUNT(*) as cnt FROM thread WHERE thread_id = "html_css"');
 $cnt = $count->fetch();
@@ -77,6 +83,7 @@ $threads->execute();
         <div id="head-right">
             <ul>
                 <li><a class="header_link" href="top_p.php">トップページ</a></li>
+                <li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
                 <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
             </ul>
         </div>
@@ -85,10 +92,31 @@ $threads->execute();
     <!--コンテンツ開始-->
     <div id="content">
         <h2>HTML/CSS 初心者質問掲示板</h2>
+        <!--スレッドタイトルの検索窓-->
+        <form action="" name="search" method="post">
+            <div><input type="text" name="searchThreadTitle" placeholder="タイトルで検索"></div> 
+            <div><input type="submit" class="button_list2" value="検索"></div>
+        </form>
+        <!--検索窓に値がいれられ、検索ボタンが押されたら検索結果を出力-->
+       <?php 
+        if(!empty($_POST) && $_POST['searchThreadTitle'] !== ''){
+        while($result = $search_stmt->fetch(PDO::FETCH_ASSOC)){
+        print '<p>'.htmlspecialchars($result['title'],ENT_QUOTES,'UTF-8').'</p>';
+        print '<p>'.htmlspecialchars($result['member_name'],ENT_QUOTES,'UTF-8').'</p>';
+        print '<p>'.htmlspecialchars($result['modified'],ENT_QUOTES,'UTF-8').'<br></p>';
+        print '<td><a class="button_link" href="each_thread.php?thread_id='.htmlspecialchars($result['id']).'">詳細</a>'.'  '.'</td>';
+        if($thread['member_name'] === $member['name']){
+            print '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($result['id']).'">削除</a>'.'  '.'</td>';}
+            print '</tr>';
+        }
+        }
+        ?>
+
         <h3>最新の投稿</h3>
         <hr>
         <table class="question">
-        <?php
+        <?php 
+        if(empty($_POST) || $_POST['searchThreadTitle'] ===''){
         foreach($threads as $thread){
             echo '<tr>';
             echo '<td>タイトル：'.htmlspecialchars($thread['title']).'｜'.'</td>';
@@ -99,33 +127,30 @@ $threads->execute();
             /*echo '<td><a href="?page_thread='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';*/
 
             /*threadテーブルのidと、each_threadのthread_idをあわせる。*/
-            echo '<td><a class="button_link "href="each_thread.php?thread_id='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';
+            echo '<td><a class="button_link" href="each_thread.php?thread_id='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';
             if($thread['member_name'] === $member['name']){
                 echo '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($thread['id']).'">削除</a>'.'  '.'</td>';}
             echo '</tr>';
+        }
         };?>
         </table>
+        <?php if(empty($_POST) || $_POST['searchThreadTitle'] ===''):?>
         <hr>
-        <ul class="paging">
-            <?php if($page >1):?>
-                <li><a href="thread.php?page_thread=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
-            <?php else:?>
-                <li>前のページへ</li>
+        <div>
+            <ul class="paging">
+                <?php if($page >1):?>
+                    <li><a href="thread_html_css.php?page_thread=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
+                <?php else:?>
+                    <li>前のページへ</li>
+                <?php endif;?>
+                <?php if($page < $maxPage):?>
+                    <li><a href="thread_html_css.php?page_thread=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
+                <?php else:?>
+                    <li>次のページへ</li>    
+                <?php endif;?>
+            </ul>
             <?php endif;?>
-            <?php if($page < $maxPage):?>
-                <li><a href="thread.php?page_thread=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
-            <?php else:?>
-                <li>次のページへ</li>    
-            <?php endif;?>
-        </ul>
-        <h4>質問はこちらから</h4>
-        <form action="" method="post">
-            <p>タイトル：<input type="text" name="title" placeholder="タイトル"></p>
-            <p>投稿者：<?php print(htmlspecialchars($member['name']));?></p>
-            <p>質問内容</p>
-                <textarea name="p_question" cols="100" rows="10" placeholder = "質問内容を入力してください。"></textarea>
-            <p><input class="button_link2" type="submit" name="button1" value="スレッドを立てる"></p>
-        </form>
+        </div>
     </div>
     <!--コンテンツ終了-->
     <!--フッター終了-->

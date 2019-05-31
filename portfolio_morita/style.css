@@ -91,10 +91,12 @@ li{
 #content{
     clear:both;
     width:100%;
-    height:auto;
     padding:30px  5px 5px 5px;
     background:#EEFFFF;
     text-align: center;
+    min-height:635px; 
+    height:auto !important; 
+    height:635px;
 }
 
 /*css radio02*/

@@ -120,7 +120,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
         <!--formのアクション属性を空にしているのは、同じ画面を再び呼び出すため。（正しくログインできたときだけページ遷移し、エラーがでたときは再度この画面をよびだす。-->
         <form action="" method="post" enctype="multipart/form-data">
         <!-- value属性には、ここで入力した値(postされた値)を設定して出力する-->
-            <p>ニックネーム：<input type="text" name="name" placeholder ="山田太郎" value="<?php print(htmlspecialchars($_POST['name'],ENT_QUOTES));?>"/>
+            <p>ニックネーム(投稿時に使用します)：<input type="text" name="name" placeholder ="山田太郎" value="<?php print(htmlspecialchars($_POST['name'],ENT_QUOTES));?>"/>
             
                 <?php if($error['name'] === 'blank'):?>
                 <p class="error">*ニックネームを入力してください。</p>

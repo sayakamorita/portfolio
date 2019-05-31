@@ -10,6 +10,9 @@ $db = new PDO($dbs, $db_user, $db_pass);
 print('DB接続エラー：'.$e ->getMessage());
 }
 
+if($_REQUEST['flg'] ==='on'){
+    unset($_SESSION['create_thread']['flg']);
+}
 
 //ログインしたままの状態を更新する
 if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
@@ -51,9 +54,14 @@ exit();*/
 <?php if(isset($_SESSION['id'])):?>
 <li><a class="header_link" href="user_detail.php?id=<?php print(htmlspecialchars($_SESSION['id']));?>">ユーザー登録情報</a></li>
 <?php endif;?>
+<?php if(!isset($_SESSION['id'])):?>
 <li><a class="header_link" href="admin.php">管理者ログイン</a></li>
+<?php endif;?>
 <?php if(!isset($_SESSION['id'])):?>
 <li><a class="header_link" href="index1_p.php">ユーザー登録</a></li>
+<?php endif;?>
+<?php if(isset($_SESSION['id'])):?>
+<li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
 <?php endif;?>
 <?php if(isset($_SESSION['id'])):?>
 <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
@@ -76,24 +84,31 @@ exit();*/
 <p id="b">まずはログイン、もしくはユーザー登録をお願いします。</p>
 <p id="c">ゲストユーザーでログイン→【ID：guest、パスワード：guest】になります！</p>
 <?php endif;?>
+<!--ログイン画面から遷移してきた時のメッセージ(ログイン画面のhidden属性を使う)-->
 <?php if($_SESSION['login'] === '1'):?>
 <p id="a"><?php print(htmlspecialchars($_SESSION['name']))?>さんのログインが無事に完了しました！</p>
 <p id="b">下から質問したい言語を選んで、学習のために活用してみてくださいね。</p>
 <p id="c">一緒にプログラミング学習頑張りましょう！</p>
 <?php endif;?>
+<!--スレッドを立てたあとに表示されるメッセージ(create_thread_confirmのhidden属性を使う)-->
+<?php if($_SESSION['create_thread']['flg'] === '1'):?>
+<p id="a">スレッドの投稿が完了しました！</p>
+<p id="b">自分の質問に回答してくれた人がいたら、必ず返信するようにしましょう。</p>
+<p id="c">誰もが気持ちのいいやりとりのできるサイトにしていきましょうね！</p>
+<?php endif;?>
 <!--上のランダムで出た数字を使い、表示する文字列をかえる。-->
 <!--$rand === '1'ではうごかず、 == にする必要がある-->
-<?php if(empty($_SESSION['login']) && $rand == '0'):?>
+<?php if(empty($_SESSION['login']) && empty($_SESSION['create_thread']['flg']) && $rand == '0'):?>
 <p id="a">こんなことを質問していいのかなと思ったら、</p>
 <p id="b">まずは一度過去の質問一覧に目を通してみてください。</p>
 <p id="c">30分調べてみてわからなかったことは、積極的に質問してみましょう！</p>
 <?php endif;?>
-<?php if(empty($_SESSION['login']) && $rand == '1'):?>
+<?php if(empty($_SESSION['login']) && empty($_SESSION['create_thread']['flg']) && $rand == '1'):?>
 <p id="a">プログラミング学習に疲れたら、少し休憩しませんか？</p>
 <p id="b">飲み物を飲んだり甘いものを食べたりすると、</p>
 <p id="c">頭もスッキリして解決しなかったエラーが一瞬で解決するかも？！</p>
 <?php endif;?>
-<?php if(empty($_SESSION['login']) && $rand == '2'):?>
+<?php if(empty($_SESSION['login']) && empty($_SESSION['create_thread']['flg']) && $rand == '2'):?>
 <p id="a">オススメの情報収集ツールの一つはTwitterです。</p>
 <p id="b">みなさんと同じく駆け出しエンジニアの方がたくさんいるので、</p>
 <p id="c">彼らと交流しながら役立つ情報を得ることができますよ！</p>
@@ -102,7 +117,6 @@ exit();*/
 </div>
 </div>
 </div>
-
 
 <!--login_p.phpで$COOKIE['email']に値が入っていたら、そのまま掲示板の画面にとべるように、URLを指定する-->
 <div class="top">

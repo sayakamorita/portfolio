@@ -64,6 +64,7 @@ if(!empty($_POST)){
         <div id="head-right">
             <ul>
                 <li><a class="header_link" href="top_p.php">トップページ</a></li>
+                <li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
                 <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
             </ul>
         </div>

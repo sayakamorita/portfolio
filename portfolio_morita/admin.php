@@ -25,6 +25,10 @@ if(isset($_SESSION['admin_id']) && $_SESSION['time'] + 3600 > time()){
 if(isset($_SESSION['login'])){
     unset($_SESSION['login']);
 }
+/*スレッドをたてた時に持っているhiddenでもっているflgを消去する*/
+if(isset($_SESSION['create_thread']['flg'])){
+    unset($_SESSION['create_thread']['flg']);
+}
 
 /*ログインボタンがクリックされた時の処理*/
 if(!empty($_POST)){

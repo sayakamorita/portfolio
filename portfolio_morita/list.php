@@ -24,6 +24,16 @@ if(isset($_SESSION['admin_id']) && $_SESSION['time'] + 3600 > time()){
 /*DBから全てのデータをとってくる
 $sql = $db->query('SELECT * FROM members');*/
 
+
+/*検索をするための処理*/
+$search_word = $_POST['searchUserName'];/*検索窓で入力された値*/
+$search_word = '%'.$search_word.'%';
+$search_sql='SELECT * FROM members WHERE name like :search_word';
+$search_stmt=$db->prepare($search_sql);
+$search_stmt->bindParam(':search_word',$search_word,PDO::PARAM_STR);
+$search_stmt->execute();
+
+/*今何件memberテーブルにデータが登録されているか*/
 $count = $db->query('SELECT COUNT(*) as cnt FROM members');
 $cnt = $count->fetch();
 
@@ -69,6 +79,20 @@ $members->execute();
     <!--コンテンツ開始-->
     <div id="top_content">
         <h2>登録者情報一覧</h2>
+        <form action="" name="search" method="post">
+            <div><input type="text" name="searchUserName" placeholder="山田太郎"></div> 
+            <div><input type="submit" class="button_list2" value="検索"></div>
+        </form>
+        <!--検索窓に値がいれられ、検索ボタンが押されたら検索結果を出力-->
+       <?php 
+        if(!empty($_POST) && $_POST['searchUserName'] !== ''){
+        while($result = $search_stmt->fetch(PDO::FETCH_ASSOC)){
+        print '<p>'.htmlspecialchars($result['id'],ENT_QUOTES,'UTF-8').'</p>';
+        print '<p>'.htmlspecialchars($result['name'],ENT_QUOTES,'UTF-8').'</p>';
+        print '<p>'.htmlspecialchars($result['email'],ENT_QUOTES,'UTF-8').'<br></p>';
+        }}
+        ?>
+
         <!--tableで全ての情報一覧を取得する-->
         <table style="margin : 0 auto">
             <tr>
@@ -77,7 +101,9 @@ $members->execute();
                 <td>メールアドレス</td>
             </tr>
         <?php 
-        foreach($members as $member){
+        /*検索ボタンが押されていなかったら、リスト一覧を表示する*/
+        if(empty($_POST) || $_POST['searchUserName'] ===''){
+            foreach($members as $member){
             echo '<tr>';
             echo '<td>'.htmlspecialchars($member['id']).' '.'</td>';
             echo '<td>'.htmlspecialchars($member['name']).' '.'</td>';
@@ -88,6 +114,7 @@ $members->execute();
             echo '<td><a class="button_link" href="detail.php?page_list='.htmlspecialchars($member['id']).'">詳細</a>'.'  '.'</td>';
             echo '<td><a class="button_link" href="list_delete.php?delete_list='.htmlspecialchars($member['id']).'">削除</a></td>';
             echo '</tr>';
+            }
         }?>
         </table>
         <div>
