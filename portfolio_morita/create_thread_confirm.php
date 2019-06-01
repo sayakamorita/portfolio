@@ -59,26 +59,24 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
         <p>入力内容を確認してください。</p>
         <form action="create_thread_complete.php" method="post">    
             
-            <table class="check_form">
-                <tr>
-                    <td>言語</td>
-                    <td><?php print(htmlspecialchars($_SESSION['create_thread']['language_category'],ENT_QUOTES));?></td>
-                </tr>
-                <tr>
-                    <td>タイトル</td>
+            <div class="check_form">
+                
+                <h3>言語：<?php print(htmlspecialchars($_SESSION['create_thread']['language_category'],ENT_QUOTES));?></h3>
+                <hr>
+                    <h3>タイトル</h3>
                     <!--index1.phpで入力され、セッションに保存された値を出力する-->
-                    <td><?php print(htmlspecialchars($_SESSION['create_thread']['question_title'],ENT_QUOTES));?></td>
-                </tr>
-                <tr>
-                    <td>名前</td>
-                    <td><?php print(htmlspecialchars($member['name'],ENT_QUOTES));?></td>
-                </tr>
-                <tr>
-                    <td>質問内容</td>
-                    <td><?php print(htmlspecialchars($_SESSION['create_thread']['p_question'],ENT_QUOTES));?></td>
-                </tr>
-            </table>
+                    <p><?php print(htmlspecialchars($_SESSION['create_thread']['question_title'],ENT_QUOTES));?></p>
+                    <hr>
+                    <h3>名前：<?php print(htmlspecialchars($member['name'],ENT_QUOTES));?></h3>
+                    <hr>
+                <div class="thread_content_check">
+                    <h3>質問内容</h3>
+                        <p><?php print(htmlspecialchars($_SESSION['create_thread']['p_question'],ENT_QUOTES));?></p>
+                </div>
+            </div>
+            <br>
             <p>この内容でよろしいですか？</p>
+            <br>
             <div class="button_center">
                 <ul>
                     <li><input class="button_link2" type="submit" value="投稿" ></li>

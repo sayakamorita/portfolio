@@ -59,7 +59,7 @@ $maxPage = ceil($cnt['cnt'] /10);
 $page = min($page,$maxPage);
 $start = ($page -1)*10;
 /*DBから投稿を取得する*/
-$threads = $db ->prepare('SELECT * FROM thread WHERE thread_id = "python" ORDER BY modified LIMIT ?,10');
+$threads = $db ->prepare('SELECT * FROM thread WHERE thread_id = "python" ORDER BY modified DESC LIMIT ?,10');
 $threads->bindParam(1,$start,PDO::PARAM_INT);
 $threads->execute();
 
@@ -94,63 +94,89 @@ $threads->execute();
         <h2>Python 初心者質問掲示板</h2>
         <!--スレッドタイトルの検索窓-->
         <form action="" name="search" method="post">
-            <div><input type="text" name="searchThreadTitle" placeholder="タイトルで検索"></div> 
-            <div><input type="submit" class="button_list2" value="検索"></div>
+            <p><input type="text" size = "30" name="searchThreadTitle" placeholder="タイトルで検索"> 
+            <input type="submit" class="button_link3" value="検索"></p>
         </form>
         <!--検索窓に値がいれられ、検索ボタンが押されたら検索結果を出力-->
        <?php 
         if(!empty($_POST) && $_POST['searchThreadTitle'] !== ''){
+        echo '<table border ="1" class="thread_table">';
+        echo '<tr>
+                <th>タイトル</th>
+                <th>投稿者</th>
+                <th>更新日時</th>
+                <th>詳細</th>
+                <th>削除</th>
+            </tr>';
         while($result = $search_stmt->fetch(PDO::FETCH_ASSOC)){
-        print '<p>'.htmlspecialchars($result['title'],ENT_QUOTES,'UTF-8').'</p>';
-        print '<p>'.htmlspecialchars($result['member_name'],ENT_QUOTES,'UTF-8').'</p>';
-        print '<p>'.htmlspecialchars($result['modified'],ENT_QUOTES,'UTF-8').'<br></p>';
+        print '<tr>';
+        print '<td>'.htmlspecialchars($result['title'],ENT_QUOTES,'UTF-8').'</td>';
+        print '<td>'.htmlspecialchars($result['member_name'],ENT_QUOTES,'UTF-8').'</td>';
+        print '<td>'.htmlspecialchars($result['modified'],ENT_QUOTES,'UTF-8').'<br></td>';
         print '<td><a class="button_link" href="each_thread.php?thread_id='.htmlspecialchars($result['id']).'">詳細</a>'.'  '.'</td>';
         if($thread['member_name'] === $member['name']){
-            print '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($result['id']).'">削除</a>'.'  '.'</td>';}
+            print '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($result['id']).'">削除</a>'.'  '.'</td>';}else{
+            print '<td>削除</td>';
+            }
             print '</tr>';
         }
+        echo '</table>';
+        print '<br><br>';
+        print '<a class="button_link" href="thread_python.php">スレッド一覧に戻る</a>';
+        
         }
         ?>
+            <?php 
+            if(empty($_POST) || $_POST['searchThreadTitle'] ===''){
+            echo '<h3>最新の投稿</h3>';
+            echo '<br>';
+            echo '<table border ="1" class="thread_table">';
+            echo '<tr>
+                    <th>タイトル</th>
+                    <th>投稿者</th>
+                    <th>更新日時</th>
+                    <th>詳細</th>
+                    <th>削除</th>
+                  </tr>';
+            foreach($threads as $thread){
+                echo '<tr>';
+                echo '<td>'.htmlspecialchars($thread['title']).'</td>';
+                echo '<td>'.htmlspecialchars($thread['member_name']).'</td>';
+                echo '<td>'.htmlspecialchars($thread['modified']).'</td>';
+                /*詳細ボタンを、URLパラメーターを使ってforeach文の中にいれる。*/
+            /* URLパラメータを使って、該当IDのeach_thread.phpに遷移する*/
+                /*echo '<td><a href="?page_thread='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';*/
 
-        <h3>最新の投稿</h3>
-        <hr>
-        <table class="question">
-        <?php 
-        if(empty($_POST) || $_POST['searchThreadTitle'] ===''){
-        foreach($threads as $thread){
-            echo '<tr>';
-            echo '<td>タイトル：'.htmlspecialchars($thread['title']).'｜'.'</td>';
-            echo '<td>投稿者'.htmlspecialchars($thread['member_name']).'／'.'</td>';
-            echo '<td>更新日時'.htmlspecialchars($thread['modified']).'／'.'</td>';
-            /*詳細ボタンを、URLパラメーターを使ってforeach文の中にいれる。*/
-           /* URLパラメータを使って、該当IDのeach_thread.phpに遷移する*/
-            /*echo '<td><a href="?page_thread='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';*/
-
-            /*threadテーブルのidと、each_threadのthread_idをあわせる。*/
-            echo '<td><a class="button_link" href="each_thread.php?thread_id='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';
-            if($thread['member_name'] === $member['name']){
-                echo '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($thread['id']).'">削除</a>'.'  '.'</td>';}
-            echo '</tr>';
-        }
-        };?>
-        </table>
-        <?php if(empty($_POST) || $_POST['searchThreadTitle'] ===''):?>
-        <hr>
-        <div>
-            <ul class="paging">
-                <?php if($page >1):?>
-                    <li><a href="thread_python.php?page_thread=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
-                <?php else:?>
-                    <li>前のページへ</li>
-                <?php endif;?>
-                <?php if($page < $maxPage):?>
-                    <li><a href="thread_python.php?page_thread=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
-                <?php else:?>
-                    <li>次のページへ</li>    
-                <?php endif;?>
-            </ul>
-            <?php endif;?>
-        </div>
+                /*threadテーブルのidと、each_threadのthread_idをあわせる。*/
+                echo '<td><a class="button_link" href="each_thread.php?thread_id='.htmlspecialchars($thread['id']).'">詳細</a>'.'  '.'</td>';
+                if($thread['member_name'] === $member['name']){
+                    echo '<td><a class="button_link" href="delete_thread.php?thread_id='.htmlspecialchars($thread['id']).'">削除</a>'.'  '.'</td>';
+                }else{
+                    echo '<td>削除</td>';
+                    }
+                echo '</tr>';
+            }
+            echo '</table>';
+            };?>
+            
+            <?php if(empty($_POST) || $_POST['searchThreadTitle'] ===''):?>
+                <br>
+                <div>
+                    <ul class="paging">
+                        <?php if($page >1):?>
+                            <li><a class="button_link" href="thread_python.php?page_thread=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
+                        <?php else:?>
+                            <li>前のページへ</li>
+                        <?php endif;?>
+                        <?php if($page < $maxPage):?>
+                            <li><a class="button_link" href="thread_python.php?page_thread=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
+                        <?php else:?>
+                            <li>次のページへ</li>    
+                        <?php endif;?>
+                    </ul>
+                    <?php endif;?>
+                </div>
+                <br>
     </div>
     <!--コンテンツ終了-->
     <!--フッター終了-->

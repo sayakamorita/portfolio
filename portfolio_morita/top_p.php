@@ -14,6 +14,11 @@ if($_REQUEST['flg'] ==='on'){
     unset($_SESSION['create_thread']['flg']);
 }
 
+//スレッドを立てる画面で、何かの言語を選択し、投稿しないままトップ画面に戻ったらそのセッションの値を消す
+if($_REQUEST['flg'] ==='on'){
+    unset($_SESSION['create_thread']['language_category']);
+}
+
 //ログインしたままの状態を更新する
 if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
 $_SESSION['time'] = time();

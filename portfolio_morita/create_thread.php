@@ -18,9 +18,6 @@ if(empty($_POST) && isset($_SESSION['create_thread']['flg'])){
     unset($_SESSION['create_thread']['flg']);
 }
 /*
-if(!empty($_POST) && !empty($error)){
-    unset($_SESSION['create_thread']['flg']);
-}*/
 /*ユーザーのログイン情報があった場合の処理*/
 if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     $_SESSION['time'] = time();
@@ -42,8 +39,8 @@ if(!empty($_POST)){
     if($_POST['p_question'] ===''){
         $error['p_question'] = 'blank';
     }
-    if(strlen($_POST['question_title']) >= 30){
-        $error['password'] = 'length';
+    if(strlen($_POST['question_title']) > 90){
+        $error['question_title'] = 'length';
     }
     /*エラーがなかったらスレッド確認画面に遷移する*/
     if(empty($error)){
@@ -51,10 +48,11 @@ if(!empty($_POST)){
         exit();
     }
 }
-/*urlパラメーターにaction_thread=rewrite_editと表示されていたら、フォームにセッションに保存された値（パスワード以外）を出力する→edit_check.phpで「戻る」ボタンを押下して遷移してきた時の処理。*/
+
+/*urlパラメーターにaction_thread=rewrite_threadと表示されていたら、フォームにセッションに保存された値（パスワード以外）を出力する→edit_check.phpで「戻る」ボタンを押下して遷移してきた時の処理。*/
 if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thread'])){
     $_POST['question_title'] = $_SESSION['create_thread']['question_title'];
-    $_POST['p_question'] = $_SESSION['create_thread']['question_title'];
+    $_POST['p_question'] = $_SESSION['create_thread']['p_question'];
 }
 ?>
 <!DOCTYPE html>
@@ -89,82 +87,58 @@ if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thr
             <!--hiddenで、トップ画面まで投稿後のセッションをもたせておく-->
             <input type="hidden" name="flg" value="1">
             <!--カテゴリーを選ぶ-->
-            <p>どの言語について質問しますか？：</p>
+            <p>質問する言語を選択してください
                 <select name='language_category'>
                 <!--カテゴリー選択Java-->
                 <option value='Java' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Java'){
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Java' || $_SESSION['create_thread']['language_category'] === 'Java'){
                             echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'Java'){
-                            echo 'selected';
-                    };?>>Java</option>
+                        ;?>>Java</option>
                 <!--カテゴリー選択JavaScript-->
                 <option value='JavaScript' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'JavaScript'){
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'JavaScript' || $_SESSION['create_thread']['language_category'] === 'JavaScript'){
                             echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'JavaScript'){
-                            echo 'selected';
-                    };?>>JavaScript</option>
+                        ;?>>JavaScript</option>
                 <!--カテゴリー選択PHP-->
                 <option value='PHP' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'PHP'){
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'PHP' || $_SESSION['create_thread']['language_category'] === 'PHP'){
                             echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'PHP'){
-                            echo 'selected';
-                    };?>>PHP</option>
+                        ;?>>PHP</option>
                 <!--カテゴリー選択Ruby-->
                 <option value='Ruby' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Ruby'){
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Ruby' || $_SESSION['create_thread']['language_category'] === 'Ruby'){
                             echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'Ruby'){
-                            echo 'selected';
-                    };?>>Ruby</option>
+                        ;?>>Ruby</option>
                 <!--カテゴリー選択Python-->
                 <option value='Python' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Python'){
-                            echo 'selected';
-                               }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'Python'){
-                            echo 'selected';
-                    };?>>Python</option>
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Python' || $_SESSION['create_thread']['language_category'] === 'Python'){
+                                    echo 'selected';
+                                    }  
+                        ;?>>Python</option>
                 <!--カテゴリー選択HTML/CSS-->
                 <option value='HTML/CSS' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'HTML/CSS'){
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'HTML/Css' || $_SESSION['create_thread']['language_category'] === 'HTML/CSS'){
                             echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'HTML/CSS'){
-                            echo 'selected';
-                    };?>>HTML/CSS</option>
+                        ;?>>HTML/CSS</option>
                 <!--カテゴリー選択Laravel-->
                 <option value='Laravel' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Laravel'){
-                            echo 'selected';
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Laravel' || $_SESSION['create_thread']['language_category'] === 'Laravel'){
+                                    echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'Laravel'){
-                            echo 'selected';
-                    };?>>Laravel</option>
+                        ;?>>Laravel</option>
                 <!--カテゴリー選択Ruby on Rails-->
                     <option value='Ruby on Rails' 
-                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Ruby on Rails'){
-                            echo 'selected';
+                        <?php if($_REQUEST['action_thread'] == 'rewrite_thread' && $_SESSION['create_thread']['language_category'] === 'Ruby on Rails' || $_SESSION['create_thread']['language_category'] === 'Ruby on Rails'){
+                                echo 'selected';
                                }  
-                        ;?>
-                        <?php if($_POST['create_thread'] === 'Ruby on Rails'){
-                            echo 'selected';
-                    };?>>Ruby on Rails</option>
-                </select>
-                <p>タイトル：<input type="text" size="40" name="question_title" placeholder="タイトル" value="<?php print(htmlspecialchars($_POST['question_title'],ENT_QUOTES));?>"></p>
+                        ;?>>Ruby on Rails</option>
+                </select></p>
+                <p>タイトルを入力してください。(30文字以内)：<input type="text" size="60" name="question_title" placeholder="Javaのオブジェクト指向について" value="<?php print(htmlspecialchars($_POST['question_title'],ENT_QUOTES));?>"></p>
                     <?php if($error['question_title'] === 'blank'):?>
                         <p class="error">*タイトルを入力してください。</p>
                     <?php endif;?>
@@ -172,7 +146,7 @@ if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thr
                         <p class="error">*タイトルは30文字以内で入力してください。</p>
                     <?php endif;?>    
                 <p>投稿者：<?php print(htmlspecialchars($member['name']));?></p>
-                <p>質問内容</p>
+                <p>質問内容(*できるだけ詳しく入力してください。)</p>
                     <textarea name="p_question" cols="130" rows="20" placeholder = "質問内容を入力してください。"><?php print(htmlspecialchars($_POST['p_question'],ENT_QUOTES));?></textarea>
                     <?php if($error['p_question'] === 'blank'):?>
                         <p class="error">*質問内容を入力してください。</p>
