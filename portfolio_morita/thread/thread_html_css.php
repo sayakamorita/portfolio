@@ -14,6 +14,10 @@ $db = new PDO($dbs, $db_user, $db_pass);
 if(isset($_SESSION['login'])){
     unset($_SESSION['login']);
 }
+/*検索窓に何も入力されてなかったとき*/
+if($_POST['searchThreadTitle'] === ''){
+    $error['searchThreadTitle'] ='blank';
+}
 
 /*スレッドをたてた時に持っているhiddenでもっているflgを消去する*/
 if(isset($_SESSION['create_thread']['flg'])){
@@ -124,11 +128,13 @@ $threads->execute();
         print '<br><br>';
         print '<a class="button_link" href="thread_html_css.php">スレッド一覧に戻る</a>';
         
+        }elseif($error['searchThreadTitle'] ==='blank'){
+            echo '<p class="error">*タイトルを入力してください。';
         }
         ?>
             <?php 
             if(empty($_POST) || $_POST['searchThreadTitle'] ===''){
-            echo '<h3>最新の投稿</h3>';
+            echo '<h3>スレッド一覧('.htmlspecialchars($cnt['cnt']).'件)</h3>';
             echo '<br>';
             echo '<table border ="1" class="thread_table">';
             echo '<tr>

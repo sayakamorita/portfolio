@@ -23,6 +23,10 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     exit();
 }
 
+/*回答内容があるかどうかのエラーチェック*/
+if($_POST['each_answer'] === ''){
+    $error['each_answer'] = 'blank';
+}
 /*DBのthreadテーブルから、idが$thread['id']のものをとりだす*/
 $each_messages = $db->prepare('SELECT * FROM thread WHERE id = ?');
 /*list.phpの編集ボタンのURLパラメーターthread_idでおくられてきた数字を、上のSQL文のid＝？に代入して値を取り出す*/
@@ -92,7 +96,7 @@ if(!empty($_POST)){
                         <?php 
                         foreach($answers as $answer){
                             echo '<h4>【返信内容】</h4>';
-                            echo '<p style="word-break : break-all">'.htmlspecialchars($answer['message']).'</p>';
+                            echo '<p style="word-break : break-all">'.nl2br(htmlspecialchars($answer['message'])).'</p>';
                             echo '<h4>投稿者：'.htmlspecialchars($answer['member_name']).'</h4>';
                             echo '<h4><b>更新日時：'.htmlspecialchars($answer['modified']).'</h4>';
                             echo '<hr>';
@@ -103,16 +107,19 @@ if(!empty($_POST)){
                     <form action="" method="post">
                         <p>投稿者：<?php print(htmlspecialchars($member['name'],ENT_QUOTES));?></p>
                         <textarea name="each_answer" cols="100" rows="10" placeholder = "回答を入力してください。"></textarea>
+                        <?php if($error['each_answer'] === 'blank'):?>
+                            <p class="error">*回答を入力してください。</p>
+                    <?php endif;?>
                         <br>
                         <div id="button_center">
-                                <input class="button_link2" type="submit" value="回答する"> 
+                                <input class="button_link3" type="submit" value="回答する"> 
                         </div>
                     </form>
                 </div>
             </div> 
             <br>
             <br>
-            <a class="header_link" href="thread_<?php print($each_message['thread_id']);?>.php">スレッド一覧に戻る</a>
+            <a class="button_link3" href="thread_<?php print($each_message['thread_id']);?>.php">スレッド一覧に戻る</a>
         </div>
     </div>
     <br>

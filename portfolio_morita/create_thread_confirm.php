@@ -79,8 +79,8 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
             <br>
             <div class="button_center">
                 <ul>
-                    <li><input class="button_link2" type="submit" value="投稿" ></li>
-                    <li><input class="button_link2" type="button" onclick="location.href='create_thread.php?action_thread=rewrite_thread'" value="修正する"></li>
+                    <li><input class="button_link" type="submit" value="投稿" ></li>
+                    <li><input class="button_link" type="button" onclick="location.href='create_thread.php?action_thread=rewrite_thread'" value="修正する"></li>
                 </ul>
             </div>
         </form>

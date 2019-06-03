@@ -77,32 +77,54 @@ $members->execute();
     </div>
     <!--ヘッダー終了-->
     <!--コンテンツ開始-->
-    <div id="top_content">
+    <div id="content">
         <h2>登録者情報一覧</h2>
+        <br>
         <form action="" name="search" method="post">
-            <div><input type="text" name="searchUserName" placeholder="山田太郎"></div> 
-            <div><input type="submit" class="button_list2" value="検索"></div>
+            <p>ユーザー情報検索：<input type="text" name="searchUserName" placeholder="山田太郎">
+            <input type="submit" class="button_list2" value="検索"></p>
         </form>
+        <br>
+        <hr>
         <!--検索窓に値がいれられ、検索ボタンが押されたら検索結果を出力-->
        <?php 
         if(!empty($_POST) && $_POST['searchUserName'] !== ''){
+        echo '<h3>検索結果一覧</h3>';
+        echo '<table border ="1" class="thread_table">';
+        echo '<tr>
+                <th>ユーザーID</th>
+                <th>ニックネーム</th>
+                <th>メールアドレス</th>
+                <th>詳細</th>
+                <th>削除</th>
+            </tr>';
         while($result = $search_stmt->fetch(PDO::FETCH_ASSOC)){
-        print '<p>'.htmlspecialchars($result['id'],ENT_QUOTES,'UTF-8').'</p>';
-        print '<p>'.htmlspecialchars($result['name'],ENT_QUOTES,'UTF-8').'</p>';
-        print '<p>'.htmlspecialchars($result['email'],ENT_QUOTES,'UTF-8').'<br></p>';
-        }}
+        print '<tr>';
+        print '<td>'.htmlspecialchars($result['id'],ENT_QUOTES,'UTF-8').'</td>';
+        print '<td>'.htmlspecialchars($result['name'],ENT_QUOTES,'UTF-8').'</td>';
+        print '<td>'.htmlspecialchars($result['email'],ENT_QUOTES,'UTF-8').'<br></td>';
+        print '<td><a class="button_link" href="detail.php?page_list='.htmlspecialchars($result['id']).'">詳細</a>'.'  '.'</td>';
+        print '<td><a class="button_link" href="list_delete.php?delete_list='.htmlspecialchars($result['id']).'">削除</a>'.'  '.'</td>';
+        print '</tr>';
+        }
+        echo '</table>';
+        print '<br><br>';
+        print '<a class="button_link" href="list.php">スレッド一覧に戻る</a>';
+        }
         ?>
 
-        <!--tableで全ての情報一覧を取得する-->
-        <table style="margin : 0 auto">
-            <tr>
-                <td>登録者ID</td>
-                <td>ニックネーム</td>
-                <td>メールアドレス</td>
-            </tr>
         <?php 
         /*検索ボタンが押されていなかったら、リスト一覧を表示する*/
         if(empty($_POST) || $_POST['searchUserName'] ===''){
+            echo '<h3>ユーザー情報一覧</h3>';
+            echo '<table border ="1" class="thread_table">';
+            echo '<tr>
+                    <th>ユーザーID</th>
+                    <th>ニックネーム</th>
+                    <th>メールアドレス</th>
+                    <th>詳細</th>
+                    <th>削除</th>
+                  </tr>';
             foreach($members as $member){
             echo '<tr>';
             echo '<td>'.htmlspecialchars($member['id']).' '.'</td>';
@@ -115,22 +137,27 @@ $members->execute();
             echo '<td><a class="button_link" href="list_delete.php?delete_list='.htmlspecialchars($member['id']).'">削除</a></td>';
             echo '</tr>';
             }
+            echo '</table>';
         }?>
-        </table>
+
+        <?php if(empty($_POST) || $_POST['searchUserName'] ===''):?>
+        <br>
         <div>
             <ul class="paging">
                 <?php if($page >1):?>
-                    <li><a href="list.php?page_list=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
+                    <li><a class="button_link" href="list.php?page_list=<?php print(htmlspecialchars($page -1));?>">前のページへ</a></li>
                 <?php else:?>
                     <li>前のページへ</li>
                 <?php endif;?>
                 <?php if($page < $maxPage):?>
-                    <li><a href="list.php?page_list=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
+                    <li><a class="button_link" href="list.php?page_list=<?php print(htmlspecialchars($page+1));?>">次のページへ</a></li>
                 <?php else:?>
                     <li>次のページへ</li>    
                 <?php endif;?>
             </ul>
-            <p><a class="button_link2" href="admin_logout.php">ログアウト</a></p>
+        <?php endif;?>
+        <br>
+        <p><a class="button_link" href="admin_logout.php">ログアウト</a></p>
         </div>
     </div>
     <!--コンテンツ終了-->

@@ -11,12 +11,12 @@ print('DB接続エラー：'.$e ->getMessage());
 }
 
 if($_REQUEST['flg'] ==='on'){
-    unset($_SESSION['create_thread']['flg']);
+unset($_SESSION['create_thread']['flg']);
 }
 
 //スレッドを立てる画面で、何かの言語を選択し、投稿しないままトップ画面に戻ったらそのセッションの値を消す
 if($_REQUEST['flg'] ==='on'){
-    unset($_SESSION['create_thread']['language_category']);
+unset($_SESSION['create_thread']['language_category']);
 }
 
 //ログインしたままの状態を更新する
@@ -35,48 +35,60 @@ exit();*/
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>トップ画面</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>トップ画面</title>
 <link rel="stylesheet" href="style.css" />
+<!--bootstrap読み込み-->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script type="text/javascript" src="portfolio.js"></script>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 </head>
 <body>
-<div class="wrap">
+<div id="wrap" >
+
 <!--ヘッダー開始-->
-<div class="head">
-<div id="head-left">
-<h1><a class="header_title" href="top_p.php">初心者エンジニアのための質問掲示板</a></h1>
-</div>
-<div id="head-right">
-<ul>
-<!--ログインしていたらログアウトボタンを、ログアウト状態であればログインボタンをヘッダーに表示させる-->
-<?php if(!isset($_SESSION['id'])):?>
-<li><a class="header_link" href="login_p.php">ログイン</a></li>
-<?php endif;?>
-<?php if(isset($_SESSION['id'])):?>
-<li><a class="header_link" href="user_detail.php?id=<?php print(htmlspecialchars($_SESSION['id']));?>">ユーザー登録情報</a></li>
-<?php endif;?>
-<?php if(!isset($_SESSION['id'])):?>
-<li><a class="header_link" href="admin.php">管理者ログイン</a></li>
-<?php endif;?>
-<?php if(!isset($_SESSION['id'])):?>
-<li><a class="header_link" href="index1_p.php">ユーザー登録</a></li>
-<?php endif;?>
-<?php if(isset($_SESSION['id'])):?>
-<li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
-<?php endif;?>
-<?php if(isset($_SESSION['id'])):?>
-<li><a class="header_link" href="logout_p.php">ログアウト</a></li>
-<?php endif;?>
-</ul>
-</div>
-</div>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000;">
+        <a class="navbar-brand" href="top_p.php">Threads For Fledgeling</a>   
+    <button class="navbar-toggler" data-toggle="collapse" data-target=#navbarNav>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-right" id="navbarNav">
+        <ul class="navbar-nav">
+        <!--ログインしていたらログアウトボタンを、ログアウト状態であればログインボタンをヘッダーに表示させる-->
+        <?php if(!isset($_SESSION['id'])):?>
+        <li class="nav-item active"><a class="nav-link" href="login_p.php">ログイン</a></li>
+        <?php endif;?>
+
+        <?php if(isset($_SESSION['id'])):?>
+        <li class="nav-item"><a class="nav-link" href="user_detail.php?id=<?php print(htmlspecialchars($_SESSION['id']));?>">ユーザー登録情報</a></li>
+        <?php endif;?>
+
+        <?php if(!isset($_SESSION['id'])):?>
+        <li class="nav-item"><a class="nav-link" href="admin.php">管理者ログイン</a></li>
+        <?php endif;?>
+
+        <?php if(!isset($_SESSION['id'])):?>
+        <li class="nav-item"><a class="nav-link" href="index1_p.php">ユーザー登録</a></li>
+        <?php endif;?>
+
+        <?php if(isset($_SESSION['id'])):?>
+        <li class="nav-item"><a class="nav-link" href="create_thread.php">スレッドを立てる</a></li>
+        <?php endif;?>
+
+        <?php if(isset($_SESSION['id'])):?>
+        <li class="nav-item"><a class="nav-link" href="logout_p.php">ログアウト</a></li>
+        <?php endif;?>
+        </ul>
+        </div>
+    </nav>
 <!--ヘッダー終了-->
 <!--コンテンツ開始-->
-<div id="top_content">
+<div id="content">
 <div class="comment">
 <div class="balloon5">
 <div class="faceicon">
@@ -124,40 +136,48 @@ exit();*/
 </div>
 
 <!--login_p.phpで$COOKIE['email']に値が入っていたら、そのまま掲示板の画面にとべるように、URLを指定する-->
-<div class="top">
-<div class="top_inline_block">
+<!--<div class="top">-->
+<div class="container">
+<!--<div class="top_inline_block">-->
+<div class="row">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a href="../thread_java.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/java.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/java.png"></a>
 </div>
-<div class="top_inline_block">
+
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="top4" href="../thread_js.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/javascript.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/javascript.png"></a>
 </div>
-<div class="top_inline_block">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="top4" href="../thread_php.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/php.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/php.png"></a>
 </div>
-<div class="top_inline_block">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="top4" href="../thread_ruby.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/ruby.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/ruby.png"></a>
 </div>
 </div>
-<div class="top">
-<div class="top_inline_block">
+</div>
+
+<div class="container">
+<div class="row">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="bottom4" href="../thread_python.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/python.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/python.png"></a>
 </div>
-<div class="top_inline_block">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="bottom4" href="../thread_html_css.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/html_css.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/html_css.png"></a>
 </div>
-<div class="top_inline_block">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="bottom4" href="../thread_laravel.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/laravel.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/laravel.png"></a>
 </div>
-<div class="top_inline_block">
+<div class="top_inline_block col-xs-6 col-lg-3">
 <a class="bottom4" href="../thread_rails.php">
-<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/rails.png" width="280px" height="160px"></a>
+<img src="https://www.soko-soko.com/wp-content/uploads/2019/05/rails.png"></a>
+</div>
 </div>
 </div>
 </div>

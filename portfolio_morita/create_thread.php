@@ -151,7 +151,7 @@ if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thr
                     <?php if($error['p_question'] === 'blank'):?>
                         <p class="error">*質問内容を入力してください。</p>
                     <?php endif;?>
-                <p><input class="button_link2" type="submit" value="確認画面へ"></p>
+                <p><input class="button_link" type="submit" value="確認画面へ"></p>
             </form>
         </div>
     </div>

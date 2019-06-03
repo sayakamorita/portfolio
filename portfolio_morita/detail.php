@@ -55,7 +55,7 @@ $members->execute(array($_REQUEST['page_list']));
     <div id="top_content">
         <h2>登録者情報</h2>
         <!--tableで全ての情報一覧を取得する-->
-        <table style="margin : 0 auto">
+        <table border ="1" class="thread_table">
             <tr>
                 <td>登録者ID</td>
                 <td>ニックネーム</td>
@@ -63,6 +63,8 @@ $members->execute(array($_REQUEST['page_list']));
                 <td>学習中のプログラミング言語</td>
                 <td>性別</td>
                 <td>年齢</td>
+                <td>詳細</td>
+                <td>削除</td>
             </tr>
             <tr></tr>
         <?php 
@@ -87,8 +89,8 @@ $members->execute(array($_REQUEST['page_list']));
         <br>
         <div id="button-center">
             <ul>
-            <li><a class="button_link2" href="list.php">登録者情報一覧画面に戻る</a></li>
-            <li><a class="button_link2" href="admin_logout.php">ログアウト</a></li>
+            <li><a class="button_link" href="list.php">登録者情報一覧画面に戻る</a></li>
+            <li><a class="button_link" href="admin_logout.php">ログアウト</a></li>
             </ul>
         </div>
 

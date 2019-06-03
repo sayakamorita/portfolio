@@ -19,7 +19,6 @@ if($_POST['name'] === ''){
       これを条件として、入力されていなかった時のエラーチェックをif文で行うことができる。*/
     $error['name'] = 'blank';
 }
-/*ニックネームのバリデーションチェック*/
 if($_POST['email'] === ''){
     $error['email'] = 'blank';
 }
@@ -118,6 +117,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
         <h3>ユーザー情報を入力してください。</h3>
         <!--formタグで囲まれたものは、method属性で指定された$_POSTという【2次元配列】の中に格納される。-->
         <!--formのアクション属性を空にしているのは、同じ画面を再び呼び出すため。（正しくログインできたときだけページ遷移し、エラーがでたときは再度この画面をよびだす。-->
+        <div class="user_form">
         <form action="" method="post" enctype="multipart/form-data">
         <!-- value属性には、ここで入力した値(postされた値)を設定して出力する-->
             <p>ニックネーム(投稿時に使用します)：<input type="text" name="name" placeholder ="山田太郎" value="<?php print(htmlspecialchars($_POST['name'],ENT_QUOTES));?>"/>
@@ -162,7 +162,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                     };?>>
                 <label for="radio02-01">選択しない</label> 
             </div>
-            <p>年齢：</p>
+            <p>年齢：
                 <select name='age'>
                 <option value='' disabled style='display:none;'>選択してください</option>
                     <option value='10代' 
@@ -221,6 +221,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                             echo 'selected';
                     };?>>60代</option>  
                 </select>
+            </p>
             <p>メールアドレス：<input type="text" name="email" placeholder ="taroyamada@xxx.com" value="<?php  print(htmlspecialchars($_POST['email'],ENT_QUOTES));?>"/>
                 <?php if($error['email'] === 'blank'):?>
                 <p class="error">*メールアドレスを入力してください。</p>
@@ -323,7 +324,7 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                 <?php endif;?>    
                 
             </p>
-            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value="">
+            <p>新しいパスワード(確認)：<input type="password" name="password_confirm" value=""></p>
             <?php if($error['password_confirm'] === 'blank'):?>
                     <p class="error">*パスワード(確認)を入力してください。</p>
             <?php endif;?>
@@ -331,10 +332,12 @@ if($_REQUEST['action'] == 'rewrite' && isset($_SESSION['join'])){
                     <p class="error">*パスワードとパスワード(確認)が一致しません。</p>
             <?php endif;?>
             <br>
+            </div>
             <br>
+            <input type="submit" class="button_link user_form_submit" value="確認">
             <br>
-            <input type="submit" class="button_link2" value="確認">
         </form>
+        
     </div>
 <!--入力フォーム終了-->
 <!--フッター開始-->
