@@ -6,6 +6,9 @@ width:100%;
 background-image: url(https://www.soko-soko.com/wp-content/uploads/2019/06/pc画像2.png);
   background-repeat: no-repeat;
   background-size: cover;
+  min-height:635px;
+height:auto !important;
+height:635px;
 }
 
 
@@ -353,6 +356,7 @@ background: #091933 ;/*ボタン色*/
 color: #FFF;
 border-bottom: solid 4px #627295;
 border-radius: 3px;
+cursor: pointer;
 }
 
 #button-center{
@@ -445,4 +449,19 @@ text-align: center;
 
 .container{
   margin:0 auto;
+}
+
+.navbar-brand {
+  background: url("https://www.soko-soko.com/wp-content/uploads/2019/06/freefont_logo_movavii-1.png") no-repeat left center;
+  background-size: contain;
+  height: 50px;
+  width: 200px;
+}
+
+textarea{
+  width:70%;
+}
+
+input.create_thread{
+  width:60%;
 }

@@ -57,22 +57,30 @@ if(!empty($_POST)){
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>質問スレッド一覧画面</title>
 	<link rel="stylesheet" href="style.css" />
+    <!--bootstrap読み込み-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="portfolio.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 </head>
 <body>
 <div id="wrap">
-    <!--ヘッダー開始-->
-    <div class="head">
-        <div id="head-left">
-            <h1><a class="header_title" href="top_p.php">初心者エンジニアのための質問掲示板</a></h1>
-        </div>
-        <div id="head-right">
-            <ul>
-                <li><a class="header_link" href="top_p.php">トップページ</a></li>
-                <li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
-                <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
-            </ul>
-        </div>
+     <!--ヘッダー開始-->
+     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000;">
+        <a class="navbar-brand" href="top_p.php"></a>   
+    <button class="navbar-toggler" data-toggle="collapse" data-target=#navbarNav>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-right" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="top_p.php">トップページ</a></li>
+            <li class="nav-item"><a class="nav-link" href="create_thread.php">スレッドを立てる</a></li>
+            <li class="nav-item"><a class="nav-link" href="logout_p.php">ログアウト</a></li>
+        </ul>
     </div>
+    </nav>
     <!--ヘッダー終了-->
     <!--コンテンツ開始-->
     <div id="content">
@@ -85,7 +93,7 @@ if(!empty($_POST)){
                 <div class="thread_content">
                         <h3>タイトル：<?php print(htmlspecialchars($each_message['title'],ENT_QUOTES));?>
                         </h3>
-                        <h4>投稿者：<?php print(htmlspecialchars     ($each_message['member_name'],ENT_QUOTES));?>
+                        <h4>投稿者：<?php print(htmlspecialchars($each_message['member_name'],ENT_QUOTES));?>
                         </h4>
                          <h4>質問内容</h4>
                         <p><?php print(htmlspecialchars($each_message['message'],ENT_QUOTES));?></p>
@@ -106,7 +114,8 @@ if(!empty($_POST)){
                     <h4>この質問に回答する</h4>
                     <form action="" method="post">
                         <p>投稿者：<?php print(htmlspecialchars($member['name'],ENT_QUOTES));?></p>
-                        <textarea name="each_answer" cols="100" rows="10" placeholder = "回答を入力してください。"></textarea>
+                        <textarea name="each_answer" cols="80" rows="15" placeholder = "回答を入力してください。"></textarea>
+                        <br>
                         <?php if($error['each_answer'] === 'blank'):?>
                             <p class="error">*回答を入力してください。</p>
                     <?php endif;?>
@@ -115,9 +124,9 @@ if(!empty($_POST)){
                                 <input class="button_link3" type="submit" value="回答する"> 
                         </div>
                     </form>
+                    <br>
                 </div>
             </div> 
-            <br>
             <br>
             <a class="button_link3" href="thread_<?php print($each_message['thread_id']);?>.php">スレッド一覧に戻る</a>
         </div>

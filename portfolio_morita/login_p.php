@@ -86,7 +86,7 @@ if($_POST['password'] ===''){
 <div id="wrap">
     <!--ヘッダー開始-->
     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000;">
-        <a class="navbar-brand" href="top_p.php">Threads For Fledgeling</a>   
+        <a class="navbar-brand" href="top_p.php"></a>   
     <button class="navbar-toggler" data-toggle="collapse" data-target=#navbarNav>
         <span class="navbar-toggler-icon"></span>
     </button>

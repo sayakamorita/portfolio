@@ -35,11 +35,6 @@ if(isset($_SESSION['id']) && $_SESSION['time'] + 3600 > time()){
     header('Location:login_p.php');
     exit();
 }
-/*DBから投稿を取得する
-$former_questions = $db->query('SELECT * FROM thread');
-$former_questions->execute();
-$former_question = $former_questions->fetch();
-*/
 
 /*検索をするための処理*/
 $search_word = $_POST['searchThreadTitle'];/*検索窓で入力された値*/
@@ -76,23 +71,31 @@ $threads->execute();
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>JavaScript質問スレッド一覧画面</title>
 	<link rel="stylesheet" href="style.css" />
+    <!--bootstrap読み込み-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="portfolio.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 </head>
 <body>
 <div id="wrap">
-    <!--ヘッダー開始-->
-    <div class="head">
-        <div id="head-left">
-        <h1><a class="header_title" href="top_p.php">初心者エンジニアのための質問掲示板</a></h1>
+     <!--ヘッダー開始-->
+     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000;">
+        <a class="navbar-brand" href="top_p.php"></a>   
+    <button class="navbar-toggler" data-toggle="collapse" data-target=#navbarNav>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-right" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="top_p.php">トップページ</a></li>
+            <li class="nav-item"><a class="nav-link" href="create_thread.php">スレッドを立てる</a></li>
+            <li class="nav-item"><a class="nav-link" href="logout_p.php">ログアウト</a></li>
+        </ul>
         </div>
-        <div id="head-right">
-            <ul>
-                <li><a class="header_link" href="top_p.php">トップページ</a></li>
-                <li><a class="header_link" href="create_thread.php">スレッドを立てる</a></li>
-                <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
-            </ul>
-        </div>
-    </div>
-    <!--ヘッダー終了-->
+    </nav>
+<!--ヘッダー終了-->
     <!--コンテンツ開始-->
     <div id="content">
         <h2>JavaScript 初心者質問掲示板</h2>

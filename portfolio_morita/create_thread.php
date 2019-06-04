@@ -61,28 +61,36 @@ if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thr
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-	<title>PHP質問スレッド一覧画面</title>
+	<title>スレッド作成画面</title>
 	<link rel="stylesheet" href="style.css" />
+    <!--bootstrap読み込み-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="portfolio.js"></script>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0">
 </head>
 <body>
 <div id="wrap">
-    <!--ヘッダー開始-->
-    <div class="head">
-        <div id="head-left">
-        <h1><a class="header_title" href="top_p.php?flg=on">初心者エンジニアのための質問掲示板</a></h1>
+     <!--ヘッダー開始-->
+     <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#000000;">
+        <a class="navbar-brand" href="top_p.php?flg=on"></a>   
+    <button class="navbar-toggler" data-toggle="collapse" data-target=#navbarNav>
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-right" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active"><a class="nav-link" href="top_p.php?flg=on">トップページ</a></li>
+            <li class="nav-item"><a class="nav-link" href="logout_p.php">ログアウト</a></li>
+        </ul>
         </div>
-        <div id="head-right">
-            <ul>
-            <li><a class="header_link" href="top_p.php?flg=on">トップページ</a></li>
-                <li><a class="header_link" href="logout_p.php">ログアウト</a></li>
-            </ul>
-        </div>
-    </div>
-    <!--ヘッダー終了-->
+    </nav>
+<!--ヘッダー終了-->
     <!--コンテンツ開始-->
     <div id="content">
         <h2>スレッド作成画面</h2>
-        <div class="">
+        <div>
             <form action="" method="post">
             <!--hiddenで、トップ画面まで投稿後のセッションをもたせておく-->
             <input type="hidden" name="flg" value="1">
@@ -138,7 +146,7 @@ if($_REQUEST['action_thread'] == 'rewrite_thread' && isset($_SESSION['create_thr
                                }  
                         ;?>>Ruby on Rails</option>
                 </select></p>
-                <p>タイトルを入力してください。(30文字以内)：<input type="text" size="60" name="question_title" placeholder="Javaのオブジェクト指向について" value="<?php print(htmlspecialchars($_POST['question_title'],ENT_QUOTES));?>"></p>
+                <p>タイトルを入力してください。(30文字以内)：</P><input type="text" class="create_thread" size="60" name="question_title" placeholder="Javaのオブジェクト指向について" value="<?php print(htmlspecialchars($_POST['question_title'],ENT_QUOTES));?>">
                     <?php if($error['question_title'] === 'blank'):?>
                         <p class="error">*タイトルを入力してください。</p>
                     <?php endif;?>
